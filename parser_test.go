@@ -4,6 +4,7 @@ import (
 	"os"
 	"path"
 	"sort"
+	"strings"
 	"testing"
 
 	"github.com/antlr4-go/antlr/v4"
@@ -36,12 +37,14 @@ func (l *CustomErrorListener) ReportContextSensitivity(recognizer antlr.Parser, 
 	antlr.ConsoleErrorListenerINSTANCE.ReportContextSensitivity(recognizer, dfa, startIndex, stopIndex, prediction, configs)
 }
 
-func TestGoogleSQLParser(t *testing.T) {
+func TestTrinoParser(t *testing.T) {
 	testFilePaths := scanSQLFileInDirRecursive(t, "examples")
 	sort.StringSlice(testFilePaths).Sort()
 
 	for _, fp := range testFilePaths {
 		t.Run(fp, func(t *testing.T) {
+			t.Parallel()
+			
 			input, err := antlr.NewFileStream(fp)
 			require.NoError(t, err)
 
@@ -60,10 +63,44 @@ func TestGoogleSQLParser(t *testing.T) {
 
 			p.BuildParseTrees = true
 
-			_ = p.Root()
+			_ = p.Parse()
 
 			require.Equal(t, 0, lexerErrors.errors, "file: %s", fp)
 			require.Equal(t, 0, parserErrors.errors, "file: %s", fp)
+		})
+	}
+}
+
+func TestBenchmarkTrinoParser(t *testing.T) {
+	testFilePaths := scanSQLFileInDirRecursive(t, "examples")
+	sort.StringSlice(testFilePaths).Sort()
+
+	for _, fp := range testFilePaths {
+		t.Run(fp, func(t *testing.T) {
+			data, err := os.ReadFile(fp)
+			require.NoError(t, err)
+			
+			sql := string(data)
+			
+			input := antlr.NewInputStream(sql)
+
+			lexer := trinoparser.NewTrinoLexer(input)
+			stream := antlr.NewCommonTokenStream(lexer, 0)
+			p := trinoparser.NewTrinoParser(stream)
+
+			lexerErrors := &CustomErrorListener{}
+			lexer.RemoveErrorListeners()
+			lexer.AddErrorListener(lexerErrors)
+
+			parserErrors := &CustomErrorListener{}
+			p.RemoveErrorListeners()
+			p.AddErrorListener(parserErrors)
+
+			p.BuildParseTrees = false
+			_ = p.Parse()
+
+			require.Equal(t, 0, lexerErrors.errors)
+			require.Equal(t, 0, parserErrors.errors)
 		})
 	}
 }
@@ -78,7 +115,7 @@ func scanSQLFileInDirRecursive(t *testing.T, dir string) []string {
 		if file.IsDir() {
 			rfps := scanSQLFileInDirRecursive(t, path.Join(dir, file.Name()))
 			fps = append(fps, rfps...)
-		} else {
+		} else if strings.HasSuffix(strings.ToLower(file.Name()), ".sql") {
 			fps = append(fps, path.Join(dir, file.Name()))
 		}
 	}
