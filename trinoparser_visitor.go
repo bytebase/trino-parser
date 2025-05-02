@@ -376,6 +376,12 @@ type TrinoParserVisitor interface {
 	// Visit a parse tree produced by TrinoParser#selectAll.
 	VisitSelectAll(ctx *SelectAllContext) interface{}
 
+	// Visit a parse tree produced by TrinoParser#as_column_alias.
+	VisitAs_column_alias(ctx *As_column_aliasContext) interface{}
+
+	// Visit a parse tree produced by TrinoParser#column_alias.
+	VisitColumn_alias(ctx *Column_aliasContext) interface{}
+
 	// Visit a parse tree produced by TrinoParser#relationDefault.
 	VisitRelationDefault(ctx *RelationDefaultContext) interface{}
 
