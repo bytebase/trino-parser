@@ -499,6 +499,14 @@ func (v *BaseTrinoParserVisitor) VisitSelectAll(ctx *SelectAllContext) interface
 	return v.VisitChildren(ctx)
 }
 
+func (v *BaseTrinoParserVisitor) VisitAs_column_alias(ctx *As_column_aliasContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseTrinoParserVisitor) VisitColumn_alias(ctx *Column_aliasContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
 func (v *BaseTrinoParserVisitor) VisitRelationDefault(ctx *RelationDefaultContext) interface{} {
 	return v.VisitChildren(ctx)
 }

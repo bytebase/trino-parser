@@ -376,6 +376,12 @@ type TrinoParserListener interface {
 	// EnterSelectAll is called when entering the selectAll production.
 	EnterSelectAll(c *SelectAllContext)
 
+	// EnterAs_column_alias is called when entering the as_column_alias production.
+	EnterAs_column_alias(c *As_column_aliasContext)
+
+	// EnterColumn_alias is called when entering the column_alias production.
+	EnterColumn_alias(c *Column_aliasContext)
+
 	// EnterRelationDefault is called when entering the relationDefault production.
 	EnterRelationDefault(c *RelationDefaultContext)
 
@@ -1362,6 +1368,12 @@ type TrinoParserListener interface {
 
 	// ExitSelectAll is called when exiting the selectAll production.
 	ExitSelectAll(c *SelectAllContext)
+
+	// ExitAs_column_alias is called when exiting the as_column_alias production.
+	ExitAs_column_alias(c *As_column_aliasContext)
+
+	// ExitColumn_alias is called when exiting the column_alias production.
+	ExitColumn_alias(c *Column_aliasContext)
 
 	// ExitRelationDefault is called when exiting the relationDefault production.
 	ExitRelationDefault(c *RelationDefaultContext)

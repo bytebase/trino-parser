@@ -768,6 +768,18 @@ func (s *BaseTrinoParserListener) EnterSelectAll(ctx *SelectAllContext) {}
 // ExitSelectAll is called when production selectAll is exited.
 func (s *BaseTrinoParserListener) ExitSelectAll(ctx *SelectAllContext) {}
 
+// EnterAs_column_alias is called when production as_column_alias is entered.
+func (s *BaseTrinoParserListener) EnterAs_column_alias(ctx *As_column_aliasContext) {}
+
+// ExitAs_column_alias is called when production as_column_alias is exited.
+func (s *BaseTrinoParserListener) ExitAs_column_alias(ctx *As_column_aliasContext) {}
+
+// EnterColumn_alias is called when production column_alias is entered.
+func (s *BaseTrinoParserListener) EnterColumn_alias(ctx *Column_aliasContext) {}
+
+// ExitColumn_alias is called when production column_alias is exited.
+func (s *BaseTrinoParserListener) ExitColumn_alias(ctx *Column_aliasContext) {}
+
 // EnterRelationDefault is called when production relationDefault is entered.
 func (s *BaseTrinoParserListener) EnterRelationDefault(ctx *RelationDefaultContext) {}
 
